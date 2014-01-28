@@ -1,43 +1,43 @@
-<!DOCTYPE html>
-<!--[if IE 6]>
-<html id="ie6" <?php language_attributes(); ?>>
-<![endif]-->
-<!--[if IE 7]>
-<html id="ie7" <?php language_attributes(); ?>>
-<![endif]-->
-<!--[if IE 8]>
-<html id="ie8" <?php language_attributes(); ?>>
-<![endif]-->
-<!--[if !(IE 6) | !(IE 7) | !(IE 8)  ]><!-->
-<html <?php language_attributes(); ?>>
-<!--<![endif]-->
-<head>
-<meta charset="<?php bloginfo( 'charset' ); ?>" />
-<meta name="viewport" content="user-scalable=no, initial-scale=1.0" />
-<title><?php
-	/*
-	 * Print the <title> tag based on what is being viewed.
-	 */
-	global $page, $paged;
+<?php
+namespace Proto2\Header;
 
-	wp_title( '|', true, 'right' );
+function the_page_title(){
+		/*
+		 * Print the <title> tag based on what is being viewed.
+		 */
+		global $page, $paged;
+		wp_title( '|', true, 'right' );
 
-	// Add a page number if necessary:
+		// Add a page number if necessary:
+		// this should probably be done with a filter instead
+		// see http://codex.wordpress.org/Function_Reference/wp_title
 	if ( $paged >= 2 || $page >= 2 )
 		echo ' | ' . sprintf( __( 'Page %s', 'toolbox' ), max( $paged, $page ) );
+}
 
-	?></title>
-<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-<link rel="profile" href="http://gmpg.org/xfn/11" />
-<?php if ( is_singular() && get_option( 'thread_comments' ) ) wp_enqueue_script( 'comment-reply' ); ?>
-<link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>" />
-<!--[if lt IE 9]>
-<script src="<?php echo get_template_directory_uri(); ?>/js/html5.js" type="text/javascript"></script>
-<![endif]-->
+add_action('wp_enqueue_scripts', function(){
+	wp_enqueue_script('bootstrap');
+	wp_enqueue_style('bootstrap');
+})
 
-<?php wp_head(); ?>
+?><!DOCTYPE html>
+<html <?php language_attributes(); ?>>
 
+<head>
+	<meta charset="<?php bloginfo( 'charset' ); ?>" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="profile" href="http://gmpg.org/xfn/11" />
+	<link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>" />
+	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!--[if lt IE 9]>
+		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+		<script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+	<![endif]-->
+	<title><?php the_page_title() ?></title>
+	<?php wp_head(); ?>
 </head>
+
 <body <?php body_class(); ?>>
 
 	<?php get_search_form(true); ?>
