@@ -18,6 +18,7 @@ function the_page_title(){
 add_action('wp_enqueue_scripts', function(){
 	wp_enqueue_script('bootstrap');
 	wp_enqueue_style('bootstrap');
+	wp_enqueue_style('bootstrap_theme');
 })
 
 ?><!DOCTYPE html>
@@ -39,13 +40,34 @@ add_action('wp_enqueue_scripts', function(){
 </head>
 
 <body <?php body_class(); ?>>
-
-	<?php get_search_form(true); ?>
-	<?php wp_nav_menu( array( 'theme_location' => 'primary' ) ); ?>
-	<?php do_action( 'before' ); ?>
-
 	<header>
-		<nav id="access" role="navigation">
-			<?php wp_nav_menu( array( 'theme_location' => 'primary' ) ); ?>
-		</nav><!-- #access -->
+		<?php //get_search_form(true); ?>
+		<!--nav id="navbar navbar-default navbar-static-top" role="navigation">
+		<?php wp_nav_menu(
+			array(
+				'theme_location' => 'account-menu',
+				'container_class' => 'nav navbar-nav'
+				)
+		); ?></nav-->
+	
+		<nav class="navbar navbar-default" role="navigation">
+			<div class="navbar-header">
+				<button type="button"
+					class="navbar-toggle" data-toggle="collapse"
+					data-target="#main-menu"
+					>
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">Brand</a>
+			</div>
+			<?php wp_nav_menu( array(
+				'theme_location' => 'main-menu',
+				'container_class' => 'collapse navbar-collapse',
+				'container_id' => 'main-menu',
+				'items_wrap'      => '<ul id="%1$s" class="nav navbar-nav %2$s">%3$s</ul>',
+			) ); ?>
+		</nav>
 	</header>
