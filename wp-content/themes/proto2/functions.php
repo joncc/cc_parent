@@ -5,8 +5,8 @@
 
 // register scripts and styles
 add_action('wp_enqueue_scripts', function(){
-	$bootstrap_dir = get_stylesheet_directory_uri() . '/bootstrap';
-	$js_dir = get_stylesheet_directory_uri() . '/js';
+	$bootstrap_dir = get_template_directory_uri() . '/bootstrap';
+	$js_dir = get_template_directory_uri() . '/js';
 
 	$min = ( ! wpedev_is_in_development() ) ? '.min' : '';
 	wp_register_script('bootstrap', $bootstrap_dir . "/js/bootstrap$min.js",
