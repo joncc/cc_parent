@@ -15,12 +15,6 @@ function the_page_title(){
 		echo ' | ' . sprintf( __( 'Page %s', 'toolbox' ), max( $paged, $page ) );
 }
 
-add_action('wp_enqueue_scripts', function(){
-	wp_enqueue_script('bootstrap');
-	wp_enqueue_style('bootstrap');
-	wp_enqueue_style('bootstrap_theme');
-})
-
 ?><!DOCTYPE html>
 <html <?php language_attributes(); ?>>
 
