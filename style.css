@@ -6,3 +6,8 @@ Author URI: http://www.computercourage.com/services/web-design/
 Description: A theme prototype using Bootstrap, created by Computer Courage.
 Version: 0.1
 */
+*, *:before, *:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+ }
