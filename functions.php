@@ -2,17 +2,7 @@
 
 /* =Actions
 --------------------------------------------------------------- */
-
-// register scripts and styles
-add_action('wp_enqueue_scripts', function(){
-	$js_dir = get_template_directory_uri() . '/js';
-	$min = ( ! wpedev_is_in_development() ) ? '.min' : '';
-
-	wp_register_style('proto2', get_template_directory_uri() . '/style.css' );
-
-	wp_register_script('backstretch',
-		'//cdnjs.cloudflare.com/ajax/libs/jquery-backstretch/2.0.4/jquery.backstretch.min.js' );
-});
+include 'includes/register_scripts_styles.php';
 
 // register menus
 add_action('init', function(){
