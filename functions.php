@@ -11,6 +11,21 @@ add_action('init', function(){
 	) );
 });
 
+
+// Slug Body Class
+// from http://www.wpbeginner.com/wp-themes/how-to-add-page-slug-in-body-class-of-your-wordpress-themes/
+add_filter(
+	'body_class',
+	function ( $classes ) {
+		global $post;
+		if ( isset( $post ) ) {
+			$classes[] = $post->post_type . '-' . $post->post_name;
+		}
+		return $classes;
+	}
+);
+
+
 /* =Functions
 --------------------------------------------------------------- */
 
