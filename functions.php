@@ -1,10 +1,10 @@
 <?php namespace Proto2;
 
-/* =Actions
---------------------------------------------------------------- */
 include 'includes/register_scripts_styles.php';
 
-// register menus
+
+/* =Register Main Menu
+--------------------------------------------------------------- */
 add_action('init', function(){
 	register_nav_menus( array(
 		'main-menu' => 'Main Menu'
@@ -12,8 +12,9 @@ add_action('init', function(){
 });
 
 
-// Slug Body Class
-// from http://www.wpbeginner.com/wp-themes/how-to-add-page-slug-in-body-class-of-your-wordpress-themes/
+/* =Add Page Slug to Body Class
+ * from http://www.wpbeginner.com/wp-themes/how-to-add-page-slug-in-body-class-of-your-wordpress-themes/
+--------------------------------------------------------------- */
 add_filter(
 	'body_class',
 	function ( $classes ) {
@@ -40,9 +41,9 @@ function timthumb( $src, $w=false, $h=false, $options=false){
 	//var_dump($src);
 	$rs = get_template_directory_uri() . '/timthumb.php';
 	$rs .= '?src=' . $src;
-	if( $w ){ $rs.= '&w=' . $w; }
-	if( $h ){ $rs.= '&h=' . $h; }
-	if( $options ){ $rs.= '&' . $options; }
+	if( $w ){ $rs.= '&amp;w=' . $w; }
+	if( $h ){ $rs.= '&amp;h=' . $h; }
+	if( $options ){ $rs.= '&amp;' . $options; }
 	return $rs;
 }
 ?>

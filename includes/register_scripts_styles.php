@@ -8,6 +8,10 @@ add_action('wp_enqueue_scripts', function(){
 		'proto2',
 		get_template_directory_uri() . '/style.css'
 	);
+	wp_register_script(
+		'html5shiv',
+		'https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js'
+	);
 
 	/* =Fancybox
 	--------------------------------------------------------------- */
