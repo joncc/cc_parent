@@ -1,13 +1,16 @@
-<?php
-
-get_header(); ?>
+<?php get_header(); ?>
 <main>
 <?php if ( have_posts() ) : ?>
-	<?php while ( have_posts() ) : the_post(); ?>
-		<?php the_content() ?>
-	<?php endwhile; ?>
+	<article>
+		<?php while ( have_posts() ) : the_post(); ?>
+			<a href='<?php the_permalink() ?>'>
+				<h2><?php the_title() ?></h2>
+			</a>
+			<?php the_excerpt() ?>
+		<?php endwhile; ?>
+	</article>
 <?php else: ?>
-	<p>No posts found</p>
+	<p>No posts match your search</p>
 <?php endif ?>
 </main>
 <?php get_footer(); ?>
