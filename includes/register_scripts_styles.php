@@ -5,7 +5,7 @@ add_action('wp_enqueue_scripts', function(){
 	$js_dir = get_template_directory_uri() . '/js';
 
 	wp_register_style(
-		'proto2',
+		'cc_parent',
 		get_template_directory_uri() . '/style.css'
 	);
 	wp_register_script(
@@ -81,6 +81,15 @@ add_action('wp_enqueue_scripts', function(){
 	wp_register_script(
 		'toggler',
 		$js_dir . '/toggler.js',
+		array('jquery'),
+		false,
+		true 
+	);
+	/* =ResponsiveNav
+	--------------------------------------------------------------- */
+	wp_register_script(
+		'responsivenav',
+		$js_dir . '/responsivenav.js',
 		array('jquery'),
 		false,
 		true 

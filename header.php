@@ -30,7 +30,7 @@ function the_page_title(){
 
 <body <?php body_class(); ?>>
 	<header>
-		<nav role="navigation">
+		<nav role="navigation" class='responsive'>
 			<?php wp_nav_menu( array(
 				'theme_location' => 'main-menu',
 				'container_id' => 'main-menu',
