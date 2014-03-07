@@ -11,9 +11,22 @@
 	// 	return totalHeight
 	// }
 
-	$.fn.responsiveNav = function(){
+
+	$.fn.responsiveNav = function( breakpoint ){
+		if( typeof breakpoint == 'undefined' ){
+			breakpoint = 650;
+		}
 		var $nav = $(this)
 		$nav.addClass('responsive')
+
+		$(window).resize(function(){
+			if( $(window).width() < breakpoint ){
+				$nav.addClass('mobile')
+			}else{
+				$nav.removeClass('mobile')
+			}
+		})
+		$(window).resize()
 
 		// create main menu toggle elements
 		var $main_toggle = {
@@ -28,6 +41,17 @@
 		$nav.prepend(
 			$main_toggle.checkbox,
 			$main_toggle.label
+		)
+
+		// prevent body scrolling when nav is open
+		$main_toggle.label.click(
+			function(){
+				if( $main_toggle.checkbox.is(':checked')){
+					$('body').css('overflow', '')
+				}else{
+					$('body').css('overflow', 'hidden')
+				}
+			}
 		)
 
 		/* =Submenu items
