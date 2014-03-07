@@ -13,7 +13,7 @@ add_action('after_theme_setup', function(){
 			'comment-list',
 		)
 	);
-})
+});
 
 
 /* =Register Main Menu
