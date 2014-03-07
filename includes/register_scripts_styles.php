@@ -20,10 +20,7 @@ add_action('wp_enqueue_scripts', function(){
 	--------------------------------------------------------------- */
 	wp_register_style(
 		'fancybox',
-		'//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.css',
-		null,
-		false,
-		true
+		'//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.css'
 	);
 	wp_register_script(
 		'fancybox',
