@@ -43,13 +43,21 @@
 			$main_toggle.label
 		)
 
-		// prevent body scrolling when nav is open
+
+		$placeholder = $('<div>').css('display', 'none')
+		$placeholder.insertAfter( $nav )
+
 		$main_toggle.label.click(
 			function(){
 				if( $main_toggle.checkbox.is(':checked')){
 					$('body').css('overflow', '')
+					$nav.insertAfter( $placeholder )
 				}else{
+					// prevent body scrolling when nav is open
 					$('body').css('overflow', 'hidden')
+					// make nav the last element in DOM
+					// so stacking context is on top of everything
+					$nav.appendTo('body')
 				}
 			}
 		)
