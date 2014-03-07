@@ -19,8 +19,11 @@
  * and define variables you want to customize in there. It will automatically be
  * loaded by timthumb. This will save you having to re-edit these variables
  * everytime you download a new version
+
+ * VERSION MODIFIED BY WP Engine
 */
-define ('VERSION', '2.8.13');																		// Version of this script 
+
+define ('VERSION', '2.8.13.1');														// Version of this script 
 //Load a config file if it exists. Otherwise, use the values below
 if( file_exists(dirname(__FILE__) . '/timthumb-config.php'))	require_once('timthumb-config.php');
 if(! defined('DEBUG_ON') )					define ('DEBUG_ON', false);								// Enable debug logging to web server error log (STDERR)
@@ -813,10 +816,9 @@ class timthumb {
 		if(! $fh){
 			return $this->error("Could not open the lockfile for writing an image.");
 		}
-		if(flock($fh, LOCK_EX)){
+		if( TRUE ){
 			@unlink($this->cachefile); //rename generally overwrites, but doing this in case of platform specific quirks. File might not exist yet.
 			rename($tempfile4, $this->cachefile);
-			flock($fh, LOCK_UN);
 			fclose($fh);
 			@unlink($lockFile);
 		} else {
