@@ -2,6 +2,19 @@
 
 include 'includes/register_scripts_styles.php';
 
+add_action('after_theme_setup', function(){
+
+	// use html5 in WP generated markup
+	add_theme_support(
+		'html5',
+		array(
+			'search-form',
+			'comment-form',
+			'comment-list',
+		)
+	);
+})
+
 
 /* =Register Main Menu
 --------------------------------------------------------------- */
