@@ -17,17 +17,6 @@
 			breakpoint = 650;
 		}
 		var $nav = $(this)
-		$nav.addClass('responsive')
-
-		$(window).resize(function(){
-			if( $(window).width() < breakpoint ){
-				$nav.addClass('mobile')
-			}else{
-				$nav.removeClass('mobile')
-			}
-		})
-		$(window).resize()
-
 		// create main menu toggle elements
 		var $main_toggle = {
 			label :
@@ -37,11 +26,29 @@
 				$('<input type="checkbox" id="toggle-main-nav"">')
 				.addClass('navtoggle')
 		}
-		// add main menu toggle to main nav
+
+		// add main menu toggle elements to main nav
 		$nav.prepend(
 			$main_toggle.checkbox,
 			$main_toggle.label
 		)
+
+		$nav.addClass('responsive')
+
+		$(window).resize(function(){
+			if( $(window).width() < breakpoint ){
+				$nav.addClass('mobile')
+			}else{
+				$nav.removeClass('mobile')
+				// if the browser is expanded beyond breakpoint
+				// while nav is open, close the nav.
+				if($main_toggle.checkbox.is(':checked')){
+					$main_toggle.label.click()
+				}
+			}
+		})
+		$(window).resize()
+
 
 
 		$placeholder = $('<div>').css('display', 'none')
