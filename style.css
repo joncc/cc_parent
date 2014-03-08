@@ -42,7 +42,6 @@ nav.responsive.mobile > input[type=checkbox]:checked ~ label:before{
 	margin: 0;
 	right: 0;
 	z-index: 30;
-	background: white;
 }
 nav.responsive.mobile > input[type=checkbox] ~ ul{
 	display: none;

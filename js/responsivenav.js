@@ -1,17 +1,5 @@
 ;(function ( $, window, document, undefined ) {
 
-	
-	// $.fn.childrenHeight = function(){
-	// 	$parent = $(this)
-	// 	var totalHeight = 0;
-
-	// 	$parent.children().each(function( i, e){
-	// 		totalHeight += $(e).outerHeight(true)
-	// 	})
-	// 	return totalHeight
-	// }
-
-
 	$.fn.responsiveNav = function( breakpoint ){
 		if( typeof breakpoint == 'undefined' ){
 			breakpoint = 650;
@@ -57,11 +45,19 @@
 		$main_toggle.label.click(
 			function(){
 				if( $main_toggle.checkbox.is(':checked')){
-					$('body').css('overflow', '')
+					$('body').add('html').css({
+						overflowX : '',
+						overflowY : '',
+						overflow  : ''
+					})
 					$nav.insertAfter( $placeholder )
 				}else{
 					// prevent body scrolling when nav is open
-					$('body').css('overflow', 'hidden')
+					$('body').add('html').css({
+						overflowX : 'hidden',
+						overflowY : 'hidden',
+						overflow  : 'hidden'
+					})
 					// make nav the last element in DOM
 					// so stacking context is on top of everything
 					$nav.appendTo('body')
