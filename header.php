@@ -1,21 +1,4 @@
-<?php
-namespace Proto2\Header;
-
-function the_page_title(){
-		/*
-		 * Print the <title> tag based on what is being viewed.
-		 */
-		global $page, $paged;
-		wp_title( '|', true, 'right' );
-
-		// Add a page number if necessary:
-		// this should probably be done with a filter instead
-		// see http://codex.wordpress.org/Function_Reference/wp_title
-	if ( $paged >= 2 || $page >= 2 )
-		echo ' | ' . sprintf( __( 'Page %s', 'toolbox' ), max( $paged, $page ) );
-}
-
-?><!DOCTYPE html>
+<!DOCTYPE html>
 <html <?php language_attributes(); ?>>
 
 <head>
@@ -24,7 +7,7 @@ function the_page_title(){
 	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 	<link rel="profile" href="http://gmpg.org/xfn/11" />
 	<link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>" />
-	<title><?php the_page_title() ?></title>
+	<title><?php wp_title( '|', true, 'right' ); ?></title>
 	<?php wp_head(); ?>
 </head>
 
