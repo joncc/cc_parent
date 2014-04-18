@@ -90,17 +90,6 @@ function register_theme_sidebar() {
 	register_sidebar( $sidebar_args );	
 }
 
-function use_html5_in_markup() {
-	add_theme_support(
-		'html5',
-		array(
-			'search-form',
-			'comment-form',
-			'comment-list',
-		)
-	);
-}
-
 function register_main_menu() {
 	register_nav_menus( array(
 		'main-menu' => 'Main Menu'
@@ -137,6 +126,7 @@ function flexible_content() {
 /* =Features
 --------------------------------------------------------------- */
 add_theme_support('post-thumbnails');
+add_theme_support('html5', array('search-form', 'comment-form',	'comment-list', 'gallery', 'caption'));
 
 
 /* =Filters
@@ -149,7 +139,6 @@ add_filter('body_class', 'Proto2\add_page_slug_to_body_class');
 --------------------------------------------------------------- */
 add_action('init', 'Proto2\register_theme_sidebar');
 add_action('init', 'Proto2\register_main_menu');
-add_action('after_theme_setup', 'Proto2\use_html5_in_markup');
 add_action('delete_attachment', 'Proto2\cleanup_thumbnails_on_delete');
 add_action('enable-media-replace-upload-done', 'Proto2\cleanup_thumbnails_on_replace');
 
