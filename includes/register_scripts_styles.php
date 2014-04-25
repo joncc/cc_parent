@@ -12,8 +12,7 @@ add_action('wp_enqueue_scripts', function(){
 		'html5shiv',
 		'https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js',
 		null,
-		false,
-		true //load in footer
+		false
 	);
 
 	/* =Fancybox
@@ -82,13 +81,4 @@ add_action('wp_enqueue_scripts', function(){
 		false,
 		true 
 	);
-	/* =ResponsiveNav
-	--------------------------------------------------------------- */
-	wp_register_script(
-		'responsivenav',
-		$js_dir . '/responsivenav.js',
-		array('jquery'),
-		false,
-		true 
-	);
-});
+}, 20);

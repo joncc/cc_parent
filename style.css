@@ -7,78 +7,62 @@ Description: A parent theme created by Computer Courage.
 Version: 0.1
 */
 
-/* For old browsers that don't recognize
- * new HTML5 elements as block level elements
- */
-main{
-	display: block;
-}
-
-/* =Responsive Nav
+/* =Resets
 ---------------------------------------------------------------------- */
-nav.responsive input[type='checkbox']{
-	display: none;
-}
 
-nav.responsive.mobile > label{
-	-moz-transition: background .25s ease-in-out;
-	-webkit-transition: background .25s ease-in-out;
-	transition: background .25s ease-in-out;
-}
-
-nav.responsive.mobile label{
-	display: block;
-}
-
-nav.responsive.mobile > input[type=checkbox]:checked ~ label{
-	display: block;
-	position: fixed;
-	top : 0;  bottom: 0;
-	left: 0;  right : 0;
-	background: rgba(0,0,0, .6);
-	z-index: 25;
-}
-nav.responsive.mobile > input[type=checkbox]:checked ~ label:before{
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video, input, textarea {
 	margin: 0;
-	right: 0;
-	z-index: 30;
+	padding: 0;
+	border: 0;
+	font: inherit;
+	vertical-align: baseline;
+	outline: none;
 }
-nav.responsive.mobile > input[type=checkbox] ~ ul{
-	display: none;
-}
-
-nav.responsive.mobile > label:before{
-	content: url(images/hamburger.svg);
-	position: absolute;
-	right: 15px;
-	bottom: 0;
-	top: 0;
-	height: 32px;
-	margin: auto;
-}
-
-nav.responsive.mobile > input[type=checkbox]:checked ~ ul{
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
 	display: block;
-	position: fixed;
-	top: 0; bottom: 0;
-	left: 0;
-	z-index: 30;
-	width: 77%;
-	overflow: auto;
 }
-/* Main Menu submenus */
-nav.responsive.mobile > ul input[type=checkbox] ~ .sub-menu{
-	display: block;
-	max-height: 0px;
-	overflow: hidden;
-	-webkit-transition: max-height .5s ease;
-	-moz-transition: max-height .5s ease;
-	transition: max-height .5s ease;
-
+html {
+	font-size: 100%;
+	font-family: Arial;
 }
-nav.responsive.mobile > ul input[type=checkbox]:checked ~ .sub-menu{
-	max-height: 400px;
-	-webkit-transition: max-height .5s ease;
-	-moz-transition: max-height .5s ease;
-	transition: max-height .5s ease;
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+*:focus,
+*:active {
+	outline: none;
+}
+input, textarea, select, option, input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button {
+	appearance: none;
+	-webkit-appearance: none;
+	border-radius: 0px;
 }
