@@ -76,20 +76,6 @@ function prevent_category_checkbox_move($args) {
 	return $args;
 }
 
-function register_theme_sidebar() {
-	$sidebar_args = array(
-		'name'          =>	__( 'Sidebar' ),
-		'id'			=>	'primary-sidebar',
-		'description'	=>	'',
-		'class'			=>	'',
-		'before_widget' =>	'<aside id="%1$s" class="widget %2$s">',
-		'after_widget'  =>	'</aside>',
-		'before_title'  =>	'<h2 class="widget-title">',
-		'after_title'   =>	'</h2>'
-	);
-	register_sidebar( $sidebar_args );	
-}
-
 function register_main_menu() {
 	register_nav_menus( array(
 		'main-menu' => 'Main Menu'
@@ -116,12 +102,6 @@ function archive_title() {
 	}
 }
 
-function flexible_content() {
-	if( is_active_sidebar('primary-sidebar') ) {
-		echo 'class="flexible-content"';
-	}
-}
-
 
 /* =Features
 --------------------------------------------------------------- */
@@ -137,7 +117,6 @@ add_filter('body_class', 'Proto2\add_page_slug_to_body_class');
 
 /* =Actions
 --------------------------------------------------------------- */
-add_action('init', 'Proto2\register_theme_sidebar');
 add_action('init', 'Proto2\register_main_menu');
 add_action('delete_attachment', 'Proto2\cleanup_thumbnails_on_delete');
 add_action('enable-media-replace-upload-done', 'Proto2\cleanup_thumbnails_on_replace');
