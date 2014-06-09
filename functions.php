@@ -32,7 +32,21 @@ function remove_thumbnail($parsed) {
 	}
 }
 
-function cc_resize($url, $width=false, $height=false, $crop=false, $scale=1) {
+function cc_resize( $url, $args = array() ) {
+	// prepare arguments
+		$defaults = array(
+			'width'   => false,
+			'height'  => false,
+			'crop'    => false,
+			'scale'   => 1
+		);
+		$args   = wp_parse_args( $args, $defaults );
+		$width  = $args['width' ];
+		$height = $args['height'];
+		$crop   = $args['crop'  ];
+		$scale  = $args['scale' ];
+
+
 	$img_dir = ABSPATH . 'wp-content/uploads/cc_resize/';
 	$image = wp_get_image_editor($url);
 	$file = pathinfo($url);
