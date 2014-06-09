@@ -61,7 +61,7 @@ table {
 *:active {
 	outline: none;
 }
-input, textarea, select, option, input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button {
+input[type="text"], input[type="email"], input[type="password"], textarea, input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button {
 	appearance: none;
 	-webkit-appearance: none;
 	border-radius: 0px;
