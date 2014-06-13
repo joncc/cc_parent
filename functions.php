@@ -48,6 +48,12 @@ function cc_resize( $url, $args = array() ) {
 
 
 	$img_dir = ABSPATH . 'wp-content/uploads/cc_resize/';
+	
+	// if the image is internal, then use the absolute path rather than the url
+	if( strpos($url, get_bloginfo('url')) === 0 ) {
+		$url = ABSPATH . str_replace(get_bloginfo('url'), '', $url);
+	}
+	
 	$image = wp_get_image_editor($url);
 	$file = pathinfo($url);
 	
