@@ -1,5 +1,5 @@
 <?php
-namespace Proto2;
+namespace CC_Parent;
 
 include 'includes/register_scripts_styles.php';
 
@@ -131,15 +131,15 @@ add_theme_support('html5', array('search-form', 'comment-form',	'comment-list', 
 
 /* =Filters
 --------------------------------------------------------------- */
-add_filter('wp_terms_checklist_args', 'Proto2\prevent_category_checkbox_move');
-add_filter('body_class', 'Proto2\add_page_slug_to_body_class');
+add_filter('wp_terms_checklist_args', 'CC_Parent\prevent_category_checkbox_move');
+add_filter('body_class', 'CC_Parent\add_page_slug_to_body_class');
 
 
 /* =Actions
 --------------------------------------------------------------- */
-add_action('init', 'Proto2\register_main_menu');
-add_action('delete_attachment', 'Proto2\cleanup_thumbnails_on_delete');
-add_action('enable-media-replace-upload-done', 'Proto2\cleanup_thumbnails_on_replace');
+add_action('init', 'CC_Parent\register_main_menu');
+add_action('delete_attachment', 'CC_Parent\cleanup_thumbnails_on_delete');
+add_action('enable-media-replace-upload-done', 'CC_Parent\cleanup_thumbnails_on_replace');
 
 
 ?>
