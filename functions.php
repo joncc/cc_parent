@@ -3,6 +3,26 @@ namespace CC_Parent;
 
 include 'includes/register_scripts_styles.php';
 
+
+/* =Features
+--------------------------------------------------------------- */
+add_theme_support('post-thumbnails');
+add_theme_support('html5', array('search-form', 'comment-form',	'comment-list', 'gallery', 'caption'));
+
+
+/* =Filters
+--------------------------------------------------------------- */
+add_filter('wp_terms_checklist_args', 'CC_Parent\prevent_category_checkbox_move');
+add_filter('body_class', 'CC_Parent\add_page_slug_to_body_class');
+
+
+/* =Actions
+--------------------------------------------------------------- */
+add_action('init', 'CC_Parent\register_main_menu');
+add_action('delete_attachment', 'CC_Parent\cleanup_thumbnails_on_delete');
+add_action('enable-media-replace-upload-done', 'CC_Parent\cleanup_thumbnails_on_replace');
+
+
 /* =Functions
 --------------------------------------------------------------- */
 if( !function_exists('wpedev_is_in_development') ) {
@@ -32,39 +52,40 @@ function remove_thumbnail($parsed) {
 	}
 }
 
-function cc_resize( $url, $args = array() ) {
-	// prepare arguments
+function resize( $url, $args = array() ) {
+	/*
+		new Resize( $args )
+		returns new url
+	*/
+	// prepare variables
 		$defaults = array(
 			'width'   => false,
 			'height'  => false,
 			'crop'    => false,
-			'scale'   => 1
+			'scale'   => 1,
+			'match_ratio' => true
 		);
 		$args   = wp_parse_args( $args, $defaults );
 		$width  = $args['width' ];
 		$height = $args['height'];
 		$crop   = $args['crop'  ];
 		$scale  = $args['scale' ];
+		$match_ratio = $args['match_ratio'];
 
-
-	$img_dir = ABSPATH . 'wp-content/uploads/cc_resize/';
+		$img_dir = ABSPATH . 'wp-content/uploads/cc_resize/';
 	
-	// if the image is internal, then use the absolute path rather than the url
-	if( strpos($url, get_bloginfo('url')) === 0 ) {
-		$url = ABSPATH . str_replace(get_bloginfo('url'), '', $url);
-	}
-	
-	$image = wp_get_image_editor($url);
-	$file = pathinfo($url);
+		// if the image is internal, then use the absolute path rather than the url
+		if( strpos($url, get_bloginfo('url')) === 0 ) {
+			$url = ABSPATH . str_replace(get_bloginfo('url'), '', $url);
+		}
+		$image = wp_get_image_editor($url);
+		$file = pathinfo($url);
 	
 	if( !is_wp_error($image) ) {
 		$orig_size = $image->get_size();
 		$orig_name = $file['filename'];
 		$extension = strtolower($file['extension']);
 		
-		if($height && $width) {
-			$crop = true;
-		}
 		if(!$width) {
 			$width = $orig_size['width'];
 		}
@@ -72,18 +93,21 @@ function cc_resize( $url, $args = array() ) {
 			$height = $orig_size['height'];
 		}
 		
-		$width = $width * $scale;
+		$width  = $width * $scale;
 		$height = $height * $scale;
-		$new_path = $img_dir . $orig_name . '-' . $width . 'x' . $height . '.' . $extension;
-		$new_url = get_bloginfo('url') . '/wp-content/uploads/cc_resize/' . $orig_name . '-' . $width . 'x' . $height . '.' . $extension;
+
+		$cropped = ( $crop ) ? '-cropped-' : '';
+		$new_path = $orig_name . '-' . $width . 'x' . $height . $cropped . '.' . $extension;
+		$new_abs_path = $img_dir . $new_path;
+		$new_url  = get_bloginfo('url') . '/wp-content/uploads/cc_resize/' . $new_path;
 		
-		if( !file_exists($new_path) ) {
+		if( !file_exists($new_abs_path) ) {
 			if( $extension==='jpg' || $extension==='jpeg' ) {
 				$image->set_quality(75);
 			}
 			
 			$image->resize($width, $height, $crop);
-			$image->save($new_path);
+			$image->save($new_abs_path);
 		}
 		return $new_url;
 	} else {
@@ -122,24 +146,85 @@ function archive_title() {
 	}
 }
 
-
-/* =Features
+/* =Classes
 --------------------------------------------------------------- */
-add_theme_support('post-thumbnails');
-add_theme_support('html5', array('search-form', 'comment-form',	'comment-list', 'gallery', 'caption'));
+define( 'CC_Resize_Image_Directory', ABSPATH . 'wp-content/uploads/cc_resize' );
+class Resize{
+	// Constants
+	const IMAGE_DIR = CC_Resize_Image_Directory;
+	// Properties
+	private
+		$source_url,
+		$width,
+		$height,
+		$crop,
+		$scale,
+		$match_ratio;
+
+	// Methods
+	public function __construct( $url, $args = array() ){
+		$this->setup_properties( $url, $args );
+		if( ! $this->resized_image_exists() ) :
+			$this->create_resized_image();
+		endif;
+		return $this->resized_image_url();
+	}
+	private function setup_properties( $url, $args = array() ){
+		$this->source_url = $url;
+		$defaults = array(
+			'width'   => false,
+			'height'  => false,
+			'crop'    => false,
+			'scale'   => 1,
+			'match_ratio' => true
+		);
+		$args   = wp_parse_args( $args, $defaults );
+		$this->width  = $args['width' ];
+		$this->height = $args['height'];
+		$this->crop   = $args['crop'  ];
+		$this->scale  = $args['scale' ];
+		$this->match_ratio = $args['match_ratio'];
+	}
+	private function resized_image_exists(){
+		if( file_exists( $this->get_resized_file_path() ) ) :
+			return true;
+		else :
+			return false;
+		endif;
+	}
+	private function create_resized_image(){
+		$image = wp_get_image_editor( $this->get_source_path() );
+		if( is_wp_error( $image ) ) :
+			trigger_error( 'could not get image editor' );
+			return false;
+		else :
+			if( $this->is_jpeg() ) {
+				$image->set_quality(75);
+			}
+			$d = $this->get_final_dimensions();
+			$image->resize( $d['width'], $d['height'], $d['crop'] );
+			$image->save( $get_cropped_file_path() );
+		endif;
+	}
+	private function get_resized_file_path(){
+		return self::IMAGE_DIR . '/' . $this->get_resized_file_name();
+	}
+	private function get_resized_file_name(){
+		$source_path_info = pathinfo( $this->source_url );
+		$file_name = $source_path_info['filename'];
+		$file_name .= '-' . $this->get_resized_width();
+		$file_name .= 'x' . $this->get_resized_height();
+		$file_name .= ( $this->crop ) ? '-cropped-' : '';
+		$file_name .= '.' . $source_path_info['extension'];
+		return $file_name;
+	}
+
+}
 
 
-/* =Filters
---------------------------------------------------------------- */
-add_filter('wp_terms_checklist_args', 'CC_Parent\prevent_category_checkbox_move');
-add_filter('body_class', 'CC_Parent\add_page_slug_to_body_class');
 
 
-/* =Actions
---------------------------------------------------------------- */
-add_action('init', 'CC_Parent\register_main_menu');
-add_action('delete_attachment', 'CC_Parent\cleanup_thumbnails_on_delete');
-add_action('enable-media-replace-upload-done', 'CC_Parent\cleanup_thumbnails_on_replace');
 
 
-?>
+
+
