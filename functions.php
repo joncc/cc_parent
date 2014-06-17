@@ -176,19 +176,21 @@ class Resize{
 			'height'  => false,
 			'crop'    => false,
 			'scale'   => 1,
+			'match_ratio' => true
 		);
-		$args   = wp_parse_args( $args, $defaults );
+		$args = wp_parse_args( $args, $defaults );
 
 		$this->crop   = $args['crop'  ];
 		$this->scale  = $args['scale' ];
+		$this->match_ratio = $args['match_ratio'];
 
 		$this->source = array( 'url' => $url );
 		$this->image =  wp_get_image_editor( $this->get_source_path() );
 		$this->source = array_merge( $this->source, $this->image->get_size() );
 		
 		$this->target = array(
-			'width'  => $args['width'],
-			'height' => $args['height']
+			'width'  => $args['width'] * $args['scale'],
+			'height' => $args['height'] * $args['scale']
 		);
 
 		$this->resized = array(
@@ -235,29 +237,38 @@ class Resize{
 	private function get_resized_dimensions(){
 		$w_ratio = $this->target['width' ] / $this->source['width'];
 		$h_ratio = $this->target['height'] / $this->source['height'];
-
+		
 		$greater_ratio = ( $w_ratio > $h_ratio ) ? $w_ratio : $h_ratio;
 		$lesser_ratio  = ( $h_ratio == $greater_ratio ) ? $w_ratio : $h_ratio;
 
 		if( $this->crop ):
-			$d = array(
-				'width'  => round( $this->source['width'] * $greater_ratio ),
-				'height' => round( $this->source['height'] * $greater_ratio )
-			);
-			if( $d['width'] > $this->target['width'] ) :
-				$d['width'] = $this->target['width'];
-			endif;
-			if( $d['height'] > $this->target['height'] ):
-				$d['height'] = $this->target['height'] ;
-			endif;
+			if( $this->match_ratio && $this->source['width'] < $this->target['width'] ){
+				$this->adjust_target( 'width' );
+			}
+			if( $this->match_ratio && $this->source['height'] < $this->target['height'] ){
+				$this->adjust_target( 'height' );
+			}
+			$d = $this->target;
 		else :
 			$d = array(
-				'width' => round( $this->source['width'] * $lesser_ratio ),
-				'height' => round( $this->source['height'] * $lesser_ratio )
+				'width' => $this->source['width'] * $lesser_ratio,
+				'height' => $this->source['height'] * $lesser_ratio
 			);
 		endif;
+
+		$d['width'] = round( $d['width'] );
+		$d['height'] = round( $d['height'] );
 		$this->resized = array_merge( $this->resized, $d );
 		return $d;
+	}
+	private function adjust_target( $side ){
+		$target_start = $this->target[$side];
+		$target_final = $this->source[$side];
+
+		$multiplier = $target_final / $target_start;
+
+		$this->target['width'] = $this->target['width'] * $multiplier;
+		$this->target['height'] = $this->target['height'] * $multiplier;
 	}
 	private function get_resized_width(){
 		if( ! $this->resized['width'] ):
