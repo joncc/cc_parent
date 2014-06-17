@@ -53,24 +53,25 @@ function remove_thumbnail($parsed) {
 }
 
 function resize( $url, $args = array() ) {
+	$o = new Resize($url, $args);
+	return $o->get_resized_image_url();
+
 	/*
-		new Resize( $args )
+		new Resize( $url, $args )
 		returns new url
-	*/
+	
 	// prepare variables
 		$defaults = array(
 			'width'   => false,
 			'height'  => false,
 			'crop'    => false,
 			'scale'   => 1,
-			'match_ratio' => true
 		);
 		$args   = wp_parse_args( $args, $defaults );
 		$width  = $args['width' ];
 		$height = $args['height'];
 		$crop   = $args['crop'  ];
 		$scale  = $args['scale' ];
-		$match_ratio = $args['match_ratio'];
 
 		$img_dir = ABSPATH . 'wp-content/uploads/cc_resize/';
 	
@@ -113,6 +114,7 @@ function resize( $url, $args = array() ) {
 	} else {
 		return false;
 	}
+	*/
 }
 
 function prevent_category_checkbox_move($args) {
@@ -154,12 +156,12 @@ class Resize{
 	const IMAGE_DIR = CC_Resize_Image_Directory;
 	// Properties
 	private
-		$source_url,
-		$width,
-		$height,
+		$source,
+		$target,
+		$resized,
 		$crop,
 		$scale,
-		$match_ratio;
+		$image;
 
 	// Methods
 	public function __construct( $url, $args = array() ){
@@ -167,23 +169,32 @@ class Resize{
 		if( ! $this->resized_image_exists() ) :
 			$this->create_resized_image();
 		endif;
-		return $this->resized_image_url();
 	}
 	private function setup_properties( $url, $args = array() ){
-		$this->source_url = $url;
 		$defaults = array(
 			'width'   => false,
 			'height'  => false,
 			'crop'    => false,
 			'scale'   => 1,
-			'match_ratio' => true
 		);
 		$args   = wp_parse_args( $args, $defaults );
-		$this->width  = $args['width' ];
-		$this->height = $args['height'];
+
 		$this->crop   = $args['crop'  ];
 		$this->scale  = $args['scale' ];
-		$this->match_ratio = $args['match_ratio'];
+
+		$this->source = array( 'url' => $url );
+		$this->image =  wp_get_image_editor( $this->get_source_path() );
+		$this->source = array_merge( $this->source, $this->image->get_size() );
+		
+		$this->target = array(
+			'width'  => $args['width'],
+			'height' => $args['height']
+		);
+
+		$this->resized = array(
+			'width' => false,
+			'height' => false,
+		);
 	}
 	private function resized_image_exists(){
 		if( file_exists( $this->get_resized_file_path() ) ) :
@@ -193,32 +204,85 @@ class Resize{
 		endif;
 	}
 	private function create_resized_image(){
-		$image = wp_get_image_editor( $this->get_source_path() );
+		$image = $this->image;
 		if( is_wp_error( $image ) ) :
 			trigger_error( 'could not get image editor' );
 			return false;
 		else :
-			if( $this->is_jpeg() ) {
+			$extension = pathinfo( $this->source['url'] );
+			if( $extension==='jpg' || $extension==='jpeg' ) {
 				$image->set_quality(75);
 			}
-			$d = $this->get_final_dimensions();
-			$image->resize( $d['width'], $d['height'], $d['crop'] );
-			$image->save( $get_cropped_file_path() );
+			$image->resize(
+				$this->get_resized_width(),
+				$this->get_resized_height(),
+				$this->crop
+			);
+			$image->save( $this->get_resized_file_path() );
 		endif;
 	}
 	private function get_resized_file_path(){
 		return self::IMAGE_DIR . '/' . $this->get_resized_file_name();
 	}
 	private function get_resized_file_name(){
-		$source_path_info = pathinfo( $this->source_url );
+		$source_path_info = pathinfo( $this->source['url'] );
 		$file_name = $source_path_info['filename'];
 		$file_name .= '-' . $this->get_resized_width();
 		$file_name .= 'x' . $this->get_resized_height();
-		$file_name .= ( $this->crop ) ? '-cropped-' : '';
 		$file_name .= '.' . $source_path_info['extension'];
 		return $file_name;
 	}
+	private function get_resized_dimensions(){
+		$w_ratio = $this->target['width' ] / $this->source['width'];
+		$h_ratio = $this->target['height'] / $this->source['height'];
 
+		$greater_ratio = ( $w_ratio > $h_ratio ) ? $w_ratio : $h_ratio;
+		$lesser_ratio  = ( $h_ratio == $greater_ratio ) ? $w_ratio : $h_ratio;
+
+		if( $this->crop ):
+			$d = array(
+				'width'  => round( $this->source['width'] * $greater_ratio ),
+				'height' => round( $this->source['height'] * $greater_ratio )
+			);
+			if( $d['width'] > $this->target['width'] ) :
+				$d['width'] = $this->target['width'];
+			endif;
+			if( $d['height'] > $this->target['height'] ):
+				$d['height'] = $this->target['height'] ;
+			endif;
+		else :
+			$d = array(
+				'width' => round( $this->source['width'] * $lesser_ratio ),
+				'height' => round( $this->source['height'] * $lesser_ratio )
+			);
+		endif;
+		$this->resized = array_merge( $this->resized, $d );
+		return $d;
+	}
+	private function get_resized_width(){
+		if( ! $this->resized['width'] ):
+			$this->get_resized_dimensions();
+		endif;
+		return $this->resized['width'];
+	}
+	private function get_resized_height(){
+		if( ! $this->resized['height'] ):
+			$this->get_resized_dimensions();
+		endif;
+		return $this->resized['height'];
+	}
+	private function get_source_path(){
+		// if the image is internal, then use the absolute path rather than the url
+		if( strpos($this->source['url'], get_bloginfo('url')) === 0 ) {
+			return ABSPATH . str_replace(get_bloginfo('url'), '', $this->source['url']);
+		}else{
+			return $this->source['url'];
+		}
+	}
+	public function get_resized_image_url(){
+		$upload_dir = wp_upload_dir();
+		return $upload_dir['baseurl'] . '/cc_resize/' . $this->get_resized_file_name();
+	}
 }
 
 
