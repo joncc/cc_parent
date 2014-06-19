@@ -55,66 +55,6 @@ function remove_thumbnail($parsed) {
 function resize( $url, $args = array() ) {
 	$o = new Resize($url, $args);
 	return $o->get_resized_image_url();
-
-	/*
-		new Resize( $url, $args )
-		returns new url
-	
-	// prepare variables
-		$defaults = array(
-			'width'   => false,
-			'height'  => false,
-			'crop'    => false,
-			'scale'   => 1,
-		);
-		$args   = wp_parse_args( $args, $defaults );
-		$width  = $args['width' ];
-		$height = $args['height'];
-		$crop   = $args['crop'  ];
-		$scale  = $args['scale' ];
-
-		$img_dir = ABSPATH . 'wp-content/uploads/cc_resize/';
-	
-		// if the image is internal, then use the absolute path rather than the url
-		if( strpos($url, get_bloginfo('url')) === 0 ) {
-			$url = ABSPATH . str_replace(get_bloginfo('url'), '', $url);
-		}
-		$image = wp_get_image_editor($url);
-		$file = pathinfo($url);
-	
-	if( !is_wp_error($image) ) {
-		$orig_size = $image->get_size();
-		$orig_name = $file['filename'];
-		$extension = strtolower($file['extension']);
-		
-		if(!$width) {
-			$width = $orig_size['width'];
-		}
-		if(!$height) {
-			$height = $orig_size['height'];
-		}
-		
-		$width  = $width * $scale;
-		$height = $height * $scale;
-
-		$cropped = ( $crop ) ? '-cropped-' : '';
-		$new_path = $orig_name . '-' . $width . 'x' . $height . $cropped . '.' . $extension;
-		$new_abs_path = $img_dir . $new_path;
-		$new_url  = get_bloginfo('url') . '/wp-content/uploads/cc_resize/' . $new_path;
-		
-		if( !file_exists($new_abs_path) ) {
-			if( $extension==='jpg' || $extension==='jpeg' ) {
-				$image->set_quality(75);
-			}
-			
-			$image->resize($width, $height, $crop);
-			$image->save($new_abs_path);
-		}
-		return $new_url;
-	} else {
-		return false;
-	}
-	*/
 }
 
 function prevent_category_checkbox_move($args) {
