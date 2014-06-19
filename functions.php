@@ -114,7 +114,7 @@ class Resize{
 		$defaults = array(
 			'width'   => false,
 			'height'  => false,
-			'crop'    => false,
+			'crop'    => true,
 			'scale'   => 1,
 			'match_ratio' => true
 		);
