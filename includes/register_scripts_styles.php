@@ -1,7 +1,6 @@
 <?php
 
-// register scripts and styles
-add_action('wp_enqueue_scripts', function(){
+function register_parent_scripts_and_styles() {
 	$js_dir = get_template_directory_uri() . '/js';
 
 	wp_register_style(
@@ -81,4 +80,6 @@ add_action('wp_enqueue_scripts', function(){
 		false,
 		true 
 	);
-}, 20);
+}
+
+add_action('wp_enqueue_scripts', 'register_parent_scripts_and_styles', 20);

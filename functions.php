@@ -235,11 +235,3 @@ class Resize{
 		return $upload_dir['baseurl'] . '/cc_resize/' . $this->get_resized_file_name();
 	}
 }
-
-
-
-
-
-
-
-

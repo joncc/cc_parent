@@ -1,10 +1,10 @@
 /*
-Theme Name: CC Parent
-Theme URI: http://computercourage.com
-Author: Computer Courage
-Author URI: http://www.computercourage.com/services/web-design/
-Description: A parent theme created by Computer Courage.
-Version: 0.1
+Theme Name:		CC Parent
+Theme URI:		http://computercourage.com
+Author:			Computer Courage
+Author URI:		http://www.computercourage.com/services/web-design/
+Description:	A parent theme created by Computer Courage.
+Version:		1.0
 */
 
 /* =Resets
@@ -61,7 +61,7 @@ table {
 *:active {
 	outline: none;
 }
-input[type="text"], input[type="email"], input[type="password"], textarea, input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button {
+input[type="text"], input[type="email"], input[type="url"], input[type="search"], input[type="password"], textarea, input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button {
 	appearance: none;
 	-webkit-appearance: none;
 	border-radius: 0px;
