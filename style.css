@@ -61,8 +61,14 @@ table {
 *:active {
 	outline: none;
 }
-input[type="text"], input[type="email"], input[type="url"], input[type="search"], input[type="password"], textarea, input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button {
+input[type="submit"], input[type="text"], input[type="email"], input[type="url"], input[type="search"], input[type="password"], textarea, input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button {
 	appearance: none;
 	-webkit-appearance: none;
 	border-radius: 0px;
+	-webkit-border-radius: 0px;
+}
+input[type="number"] {
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: textfield;
 }

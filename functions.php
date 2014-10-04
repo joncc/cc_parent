@@ -19,8 +19,11 @@ add_filter('body_class', 'CC_Parent\add_page_slug_to_body_class');
 /* =Actions
 --------------------------------------------------------------- */
 add_action('init', 'CC_Parent\register_main_menu');
+add_action('init', 'CC_Parent\register_acf_options_pages');
 add_action('delete_attachment', 'CC_Parent\cleanup_thumbnails_on_delete');
 add_action('enable-media-replace-upload-done', 'CC_Parent\cleanup_thumbnails_on_replace');
+add_action('admin_menu', 'CC_Parent\add_acf_custom_menus_link');
+add_action('admin_menu', 'CC_Parent\remove_default_menus_link', 999);
 
 
 /* =Functions
@@ -29,6 +32,34 @@ if( !function_exists('wpedev_is_in_development') ) {
 	function wpedev_is_in_development() {
 		return strpos( get_bloginfo('url'), 'wpengine.com' ) !== false;
 	}
+}
+
+function register_acf_options_pages() {
+	if( function_exists('acf_add_options_page') ) {
+		$args = array(
+			'page_title'	=> 'Theme Options',
+			'menu_slug'		=>	'options-master',
+			'position'		=>	'4.1',
+			'icon_url'		=>	'dashicons-welcome-view-site'
+		);
+		$page = acf_add_options_page($args);
+		acf_add_options_sub_page( array(
+			'title'		=>	'Header',
+			'parent'	=>	$page['menu_slug']
+		));
+		acf_add_options_sub_page( array(
+			'title'		=>	'Footer',
+			'parent'	=>	$page['menu_slug']
+		));
+	}
+}
+
+function add_acf_custom_menus_link() {
+	add_submenu_page('acf-options-header', 'Menus', 'Menus', 'manage_options', 'nav-menus.php');
+}
+
+function remove_default_menus_link() {
+	remove_submenu_page('themes.php', 'nav-menus.php');
 }
 
 function cleanup_thumbnails_on_delete($postid) {
